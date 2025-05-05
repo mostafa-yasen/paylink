@@ -7,7 +7,6 @@ app_license = "mit"
 # required_apps = []
 
 # Includes in <head>
-# ------------------
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/paylink_integration/css/paylink_integration.css"
@@ -129,6 +128,12 @@ app_license = "mit"
 # 		"on_trash": "method"
 # 	}
 # }
+
+doc_events = {
+    "Sales Invoice": {
+        "on_submit": "paylink.api.sales_invoice_hooks.before_submit_action",
+    }
+}
 
 # Scheduled Tasks
 # ---------------
