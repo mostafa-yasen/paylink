@@ -1,5 +1,5 @@
 [project]
-name = "paylink"
+name = "paylink_integration"
 authors = [
     { name = "Mostafa Yasin", email = "mostafa.a.yasin@gmail.com"}
 ]
