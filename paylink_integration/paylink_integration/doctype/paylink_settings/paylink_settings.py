@@ -1,17 +1,73 @@
 # Copyright (c) 2025, Mostafa Yasin and contributors
 # For license information, please see license.txt
 
+from __future__ import annotations
+
+from enum import Enum
+from typing import TypedDict
+
+from paylink import Paylink, PaylinkProduct
+from paylink.paylink_invoice_response import PaylinkInvoiceResponse
+
 import frappe
 from frappe.model.document import Document
-from paylink import Paylink, PaylinkProduct
+
+
+class Product(TypedDict):
+    qty: int
+    price: float
+    title: str
+    image_src: str | None
+
+
+class EnvironmentOptions(Enum):
+    TEST = "Testing"
+    PRODUCTION = "Production"
+
 
 class PaylinkSettings(Document):
-    def get_paylink(self):
+    enabled: bool
+    environment: str
+    api_key: str
+    api_secret: str
+    callback_url: str
+    currency: str
+
+    def validate(self) -> None:
+        if not self.environment or self.environment not in [
+            e.value for e in EnvironmentOptions
+        ]:
+            frappe.throw(
+                f"Environment is required and must be one of {[e.value for e in EnvironmentOptions]}"
+            )
+
+        if self.environment == EnvironmentOptions.PRODUCTION.value:
+            if not self.api_key:
+                frappe.throw("API Key is required")
+
+            if not self.api_secret:
+                frappe.throw("API Secret is required")
+
+            if not self.callback_url:
+                frappe.throw("Callback URL is required")
+
+            if not self.currency:
+                frappe.throw("Currency is required")
+
+    def get_paylink(self) -> Paylink:
         if not self.enabled:
             frappe.throw("Paylink feature is not enabled")
+
         return Paylink(self.environment, self.api_key, self.api_secret)
 
-    def create_invoice(self, amount, client_mobile, client_name, order_number, products, callback_url, currency):
+    def create_invoice(
+        self,
+        amount: float,
+        client_mobile: str,
+        client_name: str,
+        order_number: str,
+        products: list[Product],
+    ) -> PaylinkInvoiceResponse:
         paylink = self.get_paylink()
         invoice_details = paylink.add_invoice(
             amount=amount,
@@ -19,19 +75,22 @@ class PaylinkSettings(Document):
             client_name=client_name,
             order_number=order_number,
             products=[PaylinkProduct(**p) for p in products],
-            callback_url=callback_url,
-            currency=currency,
+            callback_url=self.callback_url,
+            currency=self.currency,
         )
         return invoice_details
 
-    def get_invoice(self, transaction_no):
+    def get_invoice(self, transaction_no: str) -> PaylinkInvoiceResponse:
+        """Get invoice details by transaction number"""
         paylink = self.get_paylink()
         return paylink.get_invoice(transaction_no=transaction_no)
 
-    def cancel_invoice(self, transaction_no):
+    def cancel_invoice(self, transaction_no: str) -> bool:
+        """Cancel invoice by transaction number"""
         paylink = self.get_paylink()
         return paylink.cancel_invoice(transaction_no=transaction_no)
 
-    def payment_status(self, transaction_no):
+    def payment_status(self, transaction_no: str) -> str:
+        """Get payment status by transaction number"""
         paylink = self.get_paylink()
         return paylink.order_status(transaction_no=transaction_no)
