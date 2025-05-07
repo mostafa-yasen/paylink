@@ -12,6 +12,8 @@ from paylink.paylink_invoice_response import PaylinkInvoiceResponse
 import frappe
 from frappe.model.document import Document
 
+MINIMUM_AMOUNT = 5.0
+
 
 class Product(TypedDict):
     qty: int
@@ -21,7 +23,7 @@ class Product(TypedDict):
 
 
 class EnvironmentOptions(Enum):
-    TEST = "Testing"
+    TEST = "Test"
     PRODUCTION = "Production"
 
 
@@ -55,10 +57,29 @@ class PaylinkSettings(Document):
                 frappe.throw("Currency is required")
 
     def get_paylink(self) -> Paylink:
-        if not self.enabled:
-            frappe.throw("Paylink feature is not enabled")
+        """
+        Retrieve a Paylink instance configured with the current settings.
 
-        return Paylink(self.environment, self.api_key, self.api_secret)
+        Raises:
+            ValueError: If the Paylink feature is not enabled.
+            TypeError: If the secret key is not a string.
+
+        Returns:
+            Paylink: An instance of the Paylink class configured with the environment,
+                     API key, and secret key.
+        """
+        if not self.enabled:
+            raise ValueError("Paylink feature is not enabled")
+
+        secret_key = self.get_password("api_secret")
+        if not isinstance(secret_key, str):
+            raise TypeError(f"Secret key must be a string, got {type(secret_key)}")
+
+        return Paylink(
+            environment=self.environment.lower(),
+            api_id=self.api_key,
+            secret_key=secret_key,
+        )
 
     def create_invoice(
         self,
@@ -68,6 +89,10 @@ class PaylinkSettings(Document):
         order_number: str,
         products: list[Product],
     ) -> PaylinkInvoiceResponse:
+        """Create an invoice with the given details"""
+        if amount < MINIMUM_AMOUNT:
+            raise ValueError(f"Amount must be at least {MINIMUM_AMOUNT}")
+
         paylink = self.get_paylink()
         invoice_details = paylink.add_invoice(
             amount=amount,

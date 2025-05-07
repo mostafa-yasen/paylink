@@ -44,11 +44,11 @@
    "fieldtype": "Column Break"
   },
   {
-   "default": "Testing",
+   "default": "Test",
    "fieldname": "environment",
    "fieldtype": "Select",
    "label": "Environment",
-   "options": "Testing\nProduction"
+   "options": "Test\nProduction"
   },
   {
    "depends_on": "eval:doc.enabled === 1",
@@ -70,7 +70,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-05-07 17:11:53.876503",
+ "modified": "2025-05-07 22:37:25.592443",
  "modified_by": "Administrator",
  "module": "Paylink Integration",
  "name": "Paylink Settings",
