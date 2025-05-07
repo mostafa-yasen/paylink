@@ -10,7 +10,9 @@
   "environment",
   "column_break_ilyk",
   "api_key",
-  "api_secret"
+  "api_secret",
+  "callback_url",
+  "currency"
  ],
  "fields": [
   {
@@ -47,13 +49,28 @@
    "fieldtype": "Select",
    "label": "Environment",
    "options": "Testing\nProduction"
+  },
+  {
+   "depends_on": "eval:doc.enabled === 1",
+   "fieldname": "callback_url",
+   "fieldtype": "Data",
+   "label": "Callback URL",
+   "mandatory_depends_on": "eval:doc.enabled === 1",
+   "options": "URL"
+  },
+  {
+   "default": "SAR",
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-05-07 16:48:25.838583",
+ "modified": "2025-05-07 17:11:53.876503",
  "modified_by": "Administrator",
  "module": "Paylink Integration",
  "name": "Paylink Settings",
