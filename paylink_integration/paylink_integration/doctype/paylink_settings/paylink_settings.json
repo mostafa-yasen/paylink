@@ -12,7 +12,8 @@
   "api_key",
   "api_secret",
   "callback_url",
-  "currency"
+  "currency",
+  "webhook_secret"
  ],
  "fields": [
   {
@@ -64,13 +65,19 @@
    "fieldtype": "Link",
    "label": "Currency",
    "options": "Currency"
+  },
+  {
+   "description": "Keep empty if you don't need the Bearer authentication validation",
+   "fieldname": "webhook_secret",
+   "fieldtype": "Password",
+   "label": "Webhook Secret"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-05-07 22:37:25.592443",
+ "modified": "2025-05-08 21:28:47.707773",
  "modified_by": "Administrator",
  "module": "Paylink Integration",
  "name": "Paylink Settings",

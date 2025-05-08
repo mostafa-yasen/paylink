@@ -34,6 +34,7 @@ class PaylinkSettings(Document):
     api_secret: str
     callback_url: str
     currency: str
+    webhook_secret: str | None
 
     def validate(self) -> None:
         if not self.environment or self.environment not in [
