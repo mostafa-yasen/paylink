@@ -32,8 +32,9 @@ def before_submit(doc, *args, **kwargs) -> None:
         doc.name,
         invoice_details.transaction_no,
     )
-    doc.paylink_transaction_id = invoice_details.transaction_no
-    doc.paylink_payment_link = invoice_details.url
+    doc.custom_paylink_transaction_id = invoice_details.transaction_no
+    doc.custom_paylink_payment_link = invoice_details.url
+    doc.custom_paylink_payment_status = "Unpaid"
 
 
 def on_cancel(doc, *args, **kwargs) -> None:

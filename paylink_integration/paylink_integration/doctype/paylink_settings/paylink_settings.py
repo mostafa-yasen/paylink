@@ -27,6 +27,10 @@ class EnvironmentOptions(Enum):
     PRODUCTION = "Production"
 
 
+_DEFAULT_TEST_APP_ID = "APP_ID_1123453311"
+_DEFAULT_TEST_API_SECRET = "0662abb5-13c7-38ab-cd12-236e58f43766"
+
+
 class PaylinkSettings(Document):
     enabled: bool
     environment: str
@@ -76,10 +80,21 @@ class PaylinkSettings(Document):
         if not isinstance(secret_key, str):
             raise TypeError(f"Secret key must be a string, got {type(secret_key)}")
 
+        app_id = (
+            _DEFAULT_TEST_APP_ID
+            if self.environment == EnvironmentOptions.TEST.value
+            else self.api_key
+        )
+        api_secret = (
+            _DEFAULT_TEST_API_SECRET
+            if self.environment == EnvironmentOptions.TEST.value
+            else secret_key
+        )
+
         return Paylink(
             environment=self.environment.lower(),
-            api_id=self.api_key,
-            secret_key=secret_key,
+            api_id=app_id,
+            secret_key=api_secret,
         )
 
     def create_invoice(

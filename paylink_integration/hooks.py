@@ -132,7 +132,7 @@ app_license = "mit"
 
 doc_events = {
     "Sales Invoice": {
-        "on_submit": "paylink_integration.api.sales_invoice_hooks.before_submit",
+        "before_submit": "paylink_integration.api.sales_invoice_hooks.before_submit",
         "on_cancel": "paylink_integration.api.sales_invoice_hooks.on_cancel",
     }
 }
