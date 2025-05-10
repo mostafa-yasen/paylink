@@ -233,4 +233,22 @@ doc_events = {
 # default_log_clearing_doctypes = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
-fixtures = []
+fixtures = [
+    {
+        "dt": "Custom Field",
+        "filters": [
+            [
+                "name",
+                "in",
+                [
+                    "Sales Invoice-custom_paylink",
+                    "Sales Invoice-custom_paylink_details",
+                    "Sales Invoice-custom_paylink_payment_link",
+                    "Sales Invoice-custom_paylink_transaction_id",
+                    "Sales Invoice-custom_column_break_pcmhh",
+                    "Sales Invoice-custom_paylink_payment_status",
+                ],
+            ],
+        ],
+    },
+]
