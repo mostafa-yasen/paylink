@@ -182,11 +182,11 @@ class PaylinkWebhookHandler:
             return False
 
         transaction_no = self.data["transactionNo"]
-        if invoice.paylink_transaction_id != transaction_no:  # type: ignore
+        if invoice.custom_paylink_transaction_id != transaction_no:  # type: ignore
             _logger.error(
                 "Transaction ID mismatch for %s. Expected %s, got %s",
                 invoice.name,
-                invoice.paylink_transaction_id,  # type: ignore
+                invoice.custom_paylink_transaction_id,  # type: ignore
                 transaction_no,
             )
             self.response = {"success": False, "message": "Transaction ID mismatch"}

@@ -39,13 +39,13 @@ def before_submit(doc, *args, **kwargs) -> None:
 
 def on_cancel(doc, *args, **kwargs) -> None:
     paylink_settings: PaylinkSettings = frappe.get_single("Paylink Settings")  # type: ignore
-    if not doc.paylink_transaction_id:
+    if not doc.custom_paylink_transaction_id:
         _logger.warning("No Paylink transaction ID found for invoice %s", doc.name)
         return
 
-    paylink_settings.cancel_invoice(doc.paylink_transaction_id)
+    paylink_settings.cancel_invoice(doc.custom_paylink_transaction_id)
     _logger.info(
         "Paylink invoice cancelled for %s with transaction no %s",
         doc.name,
-        doc.paylink_transaction_id,
+        doc.custom_paylink_transaction_id,
     )
